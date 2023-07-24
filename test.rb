@@ -48,8 +48,6 @@ puts "Teacher specialization: #{teacher.specialization}"
 # Test the can_use_services? method
 puts "Can teacher use services?: #{teacher.can_use_services?}"
 
-
-
 # Test Person class
 person = Person.new(22, name: 'maximilianus')
 puts "Person's correct name: #{person.correct_name}"
