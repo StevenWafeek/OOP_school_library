@@ -1,15 +1,8 @@
 <a name="readme-top"></a>
 
 <div align="center">
-  <br/>
-  <br/>
-  <br/>
-  <!-- You are encouraged to replace this logo with your own! Otherwise you can also remove it. -->
-  <img src="./docs/logo3.svg" alt="logo" width="400"  height="auto" />
-  <br/>
-  <br/>
-  <br/>
-  <h1><b>Morse Decoder</b></h1><a name="about-project"></a>
+
+  <h1><b>OOP school library</b></h1><a name="about-project"></a>
 </div>
 
 <!--
@@ -39,7 +32,7 @@ After you're finished please remove all the comments and instructions!
 # 📗 Table of Contents
 
 - [📗 Table of Contents](#-table-of-contents)
-- [📖 Morse Decoder ](#-morse-decoder-)
+- [📖 OOP school library ](#-OOP-school-library-)
   - [🛠 Built With ](#-built-with-)
     - [Tech Stack ](#tech-stack-)
     - [Key Features ](#key-features-)
@@ -58,9 +51,9 @@ After you're finished please remove all the comments and instructions!
 
 <!-- PROJECT DESCRIPTION -->
 
-# 📖 Morse Decoder <a name="about-project"></a>
+# 📖 OOP school library <a name="about-project"></a>
 
-> The **_Morse Decoder_** is a project that allows you to decode morse code.
+> The **_OOP school library_** is a project that allows you to get information about school.
 
 ## 🛠 Built With <a name="built-with"></a>
 
@@ -93,7 +86,7 @@ After you're finished please remove all the comments and instructions!
 
 ### Key Features <a name="key-features"></a>
 
-- Decodes a message wrote using morse code.
+- Add more teachers and students to school .
 - Use of Ruby's best practices.
 - Use of Gitflow.
 - Use of linters.
@@ -128,7 +121,7 @@ Clone this repository to your desired folder:
 
 ```sh
   cd my-folder
-  git clone https://github.com/SergioPeralta22/morse-decoder.git
+  git clone https://github.com/StevenWafeek/OOP_school_library
 ```
 
 ### Install
@@ -144,7 +137,7 @@ Install this project with:
 To run the project, run the following command:
 
 ```sh
-  ruby morse_decoder.rb
+  ruby test.rb
 ```
 
 ### Run tests
@@ -171,14 +164,6 @@ Example:
 
 <!-- AUTHORS -->
 
-## 👥 Authors <a name="authors"></a>
-
-👤 Sergio Peralta
-
-- GitHub: [@SergioPeralta22](https://github.com/SergioPeralta22)
-- Twitter: [@SePeralta22](https://twitter.com/SePeralta22)
-- LinkedIn: [LinkedIn](https://linkedin.com/in/sergioperalta22)
-
 👤 **steven wafeek**
 
 - GitHub: [StevenWafeek](https://github.com/StevenWafeek)
@@ -193,8 +178,8 @@ Example:
 ## 🔭 Future Features <a name="future-features"></a>
 
 - **More data**
-- **More decodes**
-- **More supported languages**
+- **More classes**
+- **More methouds**
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
