@@ -23,6 +23,7 @@ puts "Student classroom: #{student.classroom}"
 
 # Test the can_use_services? method
 puts "Can student use services?: #{student.can_use_services?}"
+puts "Student played hooky: #{student.play_hooky}"
 
 # Create a new teacher
 teacher = Teacher.new(35, 'Math')
