@@ -62,35 +62,38 @@ def list_all_people(people)
 end
 
 def create_person(people)
-  puts "\nCreate a person:"
-  puts "Enter the person's name:"
-  name = gets.chomp
-
-  puts "Enter the person's age:"
-  age = gets.chomp.to_i
-
-  puts 'Is it a teacher or a student? (T/S)'
-  role = gets.chomp.downcase
-
-  if role == 't'
-    puts "Enter the teacher's specialization:"
-    specialization = gets.chomp
-    person = Teacher.new(age, specialization, name: name)
-  elsif role == 's'
-    puts "Enter the student's classroom label:"
-    classroom_label = gets.chomp
-    classroom = Classroom.new(classroom_label)
-    person = Student.new(age, classroom, name: name, parent_permission: true)
-  else
-    puts 'Invalid role. Please try again.'
-    return
+    puts "\nCreate a person:"
+    puts "Is it a teacher or a student? (T/S)"
+    role = gets.chomp.downcase
+  
+    if role == 't'
+      puts "Enter the teacher's age:"
+      age = gets.chomp.to_i
+      puts "Enter the teacher's name:"
+      name = gets.chomp
+      puts "Enter the teacher's specialization:"
+      specialization = gets.chomp
+      person = Teacher.new(age, specialization, name: name)
+    elsif role == 's'
+      puts "Enter the student's age:"
+      age = gets.chomp.to_i
+      puts "Enter the student's name:"
+      name = gets.chomp
+      puts "Enter the student's classroom label:"
+      classroom_label = gets.chomp
+      classroom = Classroom.new(classroom_label)
+      person = Student.new(age, classroom, name: name)
+    else
+      puts "Invalid role. Please try again."
+      return
+    end
+  
+    people << person # Store the newly created person instance in the 'people' array
+  
+    puts "Person successfully created!"
+    puts "ID: #{person.id}, Name: #{person.name}, Role: #{person.class.name}"
   end
-
-  people << person
-
-  puts 'Person successfully created!'
-  puts "ID: #{person.id}, Name: #{person.name}, Role: #{person.class.name}"
-end
+  
 
 def create_book(books)
   puts "\nCreate a book:"
