@@ -112,36 +112,41 @@ def create_book(books)
 end
 
 def create_rental(books, people)
-  puts "\nCreate a rental:"
-  puts "Enter the person's ID:"
-  person_id = gets.chomp.to_i
-
-  person = people.find { |p| p.id == person_id }
-
-  if person.nil?
-    puts "Person with ID #{person_id} not found."
-    return
+    puts "\nCreate a rental:"
+    puts "\nList of all books:"
+    books.each_with_index do |book, index|
+      puts "#{index + 1}. #{book.title} by #{book.author}"
+    end
+  
+    puts "Enter the person's ID:"
+    person_id = gets.chomp.to_i
+  
+    person = people.find { |p| p.id == person_id }
+  
+    if person.nil?
+      puts "Person with ID #{person_id} not found."
+      return
+    end
+  
+    puts "Enter the number of the book you want to rent:"
+    book_number = gets.chomp.to_i
+  
+    if book_number < 1 || book_number > books.length
+      puts "Invalid book number. Please try again."
+      return
+    end
+  
+    book = books[book_number - 1]
+  
+    puts "Enter the rental date (YYYY-MM-DD):"
+    date = gets.chomp
+  
+    rental = Rental.new(date, book, person)
+    book.rentals << rental
+    person.rentals << rental
+  
+    puts "Rental successfully created!"
   end
-
-  puts "Enter the book's title:"
-  book_title = gets.chomp
-
-  book = books.find { |b| b.title == book_title }
-
-  if book.nil?
-    puts "Book with title '#{book_title}' not found."
-    return
-  end
-
-  puts 'Enter the rental date (YYYY-MM-DD):'
-  date = gets.chomp
-
-  rental = Rental.new(date, book, person)
-  book.rentals << rental
-  person.rentals << rental
-
-  puts 'Rental successfully created!'
-end
 
 def list_rentals_for_person(people)
   puts "\nList rentals for a person:"
