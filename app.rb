@@ -62,38 +62,37 @@ def list_all_people(people)
 end
 
 def create_person(people)
-    puts "\nCreate a person:"
-    puts "Is it a teacher or a student? (T/S)"
-    role = gets.chomp.downcase
-  
-    if role == 't'
-      puts "Enter the teacher's age:"
-      age = gets.chomp.to_i
-      puts "Enter the teacher's name:"
-      name = gets.chomp
-      puts "Enter the teacher's specialization:"
-      specialization = gets.chomp
-      person = Teacher.new(age, specialization, name: name)
-    elsif role == 's'
-      puts "Enter the student's age:"
-      age = gets.chomp.to_i
-      puts "Enter the student's name:"
-      name = gets.chomp
-      puts "Enter the student's classroom label:"
-      classroom_label = gets.chomp
-      classroom = Classroom.new(classroom_label)
-      person = Student.new(age, classroom, name: name)
-    else
-      puts "Invalid role. Please try again."
-      return
-    end
-  
-    people << person # Store the newly created person instance in the 'people' array
-  
-    puts "Person successfully created!"
-    puts "ID: #{person.id}, Name: #{person.name}, Role: #{person.class.name}"
+  puts "\nCreate a person:"
+  puts 'Is it a teacher or a student? (T/S)'
+  role = gets.chomp.downcase
+
+  if role == 't'
+    puts "Enter the teacher's age:"
+    age = gets.chomp.to_i
+    puts "Enter the teacher's name:"
+    name = gets.chomp
+    puts "Enter the teacher's specialization:"
+    specialization = gets.chomp
+    person = Teacher.new(age, specialization, name: name)
+  elsif role == 's'
+    puts "Enter the student's age:"
+    age = gets.chomp.to_i
+    puts "Enter the student's name:"
+    name = gets.chomp
+    puts "Enter the student's classroom label:"
+    classroom_label = gets.chomp
+    classroom = Classroom.new(classroom_label)
+    person = Student.new(age, classroom, name: name)
+  else
+    puts 'Invalid role. Please try again.'
+    return
   end
-  
+
+  people << person # Store the newly created person instance in the 'people' array
+
+  puts 'Person successfully created!'
+  puts "ID: #{person.id}, Name: #{person.name}, Role: #{person.class.name}"
+end
 
 def create_book(books)
   puts "\nCreate a book:"
@@ -112,41 +111,41 @@ def create_book(books)
 end
 
 def create_rental(books, people)
-    puts "\nCreate a rental:"
-    puts "\nList of all books:"
-    books.each_with_index do |book, index|
-      puts "#{index + 1}. #{book.title} by #{book.author}"
-    end
-  
-    puts "Enter the person's ID:"
-    person_id = gets.chomp.to_i
-  
-    person = people.find { |p| p.id == person_id }
-  
-    if person.nil?
-      puts "Person with ID #{person_id} not found."
-      return
-    end
-  
-    puts "Enter the number of the book you want to rent:"
-    book_number = gets.chomp.to_i
-  
-    if book_number < 1 || book_number > books.length
-      puts "Invalid book number. Please try again."
-      return
-    end
-  
-    book = books[book_number - 1]
-  
-    puts "Enter the rental date (YYYY-MM-DD):"
-    date = gets.chomp
-  
-    rental = Rental.new(date, book, person)
-    book.rentals << rental
-    person.rentals << rental
-  
-    puts "Rental successfully created!"
+  puts "\nCreate a rental:"
+  puts "\nList of all books:"
+  books.each_with_index do |book, index|
+    puts "#{index + 1}. #{book.title} by #{book.author}"
   end
+
+  puts "Enter the person's ID:"
+  person_id = gets.chomp.to_i
+
+  person = people.find { |p| p.id == person_id }
+
+  if person.nil?
+    puts "Person with ID #{person_id} not found."
+    return
+  end
+
+  puts 'Enter the number of the book you want to rent:'
+  book_number = gets.chomp.to_i
+
+  if book_number < 1 || book_number > books.length
+    puts 'Invalid book number. Please try again.'
+    return
+  end
+
+  book = books[book_number - 1]
+
+  puts 'Enter the rental date (YYYY-MM-DD):'
+  date = gets.chomp
+
+  rental = Rental.new(date, book, person)
+  book.rentals << rental
+  person.rentals << rental
+
+  puts 'Rental successfully created!'
+end
 
 def list_rentals_for_person(people)
   puts "\nList rentals for a person:"
