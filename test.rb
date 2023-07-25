@@ -85,3 +85,13 @@ person2 = Person.new(2, name: 'Person 2')
 Rental.new('2023-07-24', book1, person1)
 Rental.new('2023-07-25', book2, person1)
 Rental.new('2023-07-26', book1, person2)
+
+puts "#{person1.name}'s rentals:"
+person1.rentals.each do |rental|
+  puts "Book: #{rental.book.title}, Date: #{rental.date}"
+end
+
+puts "#{book1.title}'s rentals:"
+book1.rentals.each do |rental|
+  puts "Person: #{rental.person.name}, Date: #{rental.date}"
+end
