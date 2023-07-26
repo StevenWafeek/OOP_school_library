@@ -4,7 +4,7 @@ require_relative 'teacher'
 require_relative 'classroom'
 require_relative 'book'
 require_relative 'rental'
-
+require 'pry'
 # Initialize arrays to keep track of all book and person instances
 books = []
 people = []
@@ -70,7 +70,7 @@ def create_person(people)
     puts "Enter the teacher's age:"
     age = gets.chomp.to_i
     puts "Enter the teacher's name:"
-    name = gets.chomp
+    name 
     puts "Enter the teacher's specialization:"
     specialization = gets.chomp
     person = Teacher.new(age, specialization, name: name)
@@ -119,9 +119,9 @@ def create_rental(books, people)
 
   puts "Enter the person's ID:"
   person_id = gets.chomp.to_i
-
   person = people.find { |p| p.id == person_id }
-
+  
+  binding.pry
   if person.nil?
     puts "Person with ID #{person_id} not found."
     return
