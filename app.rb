@@ -89,43 +89,66 @@ class LibraryApp
   def create_rental
     puts "\nCreate a rental:"
 
-    # List all people and books only once
-    puts "\nList of all people:"
-    people.each do |person|
-      puts "#{person.name} (#{person.class.name}) - ID: #{person.id}"
-    end
+    list_all_people
+    list_all_books
 
-    puts "\nList of all books:"
-    books.each_with_index do |book, index|
-      puts "#{index + 1}. #{book.title} by #{book.author}"
-    end
+    person_id = input_person_id
+    return if person_id.nil?
 
-    puts "Enter the person's ID:"
-    person_id = gets.chomp.to_i
+    book_number = input_book_number
+    return if book_number.nil?
+
+    book = books[book_number - 1]
+
+    date = nil
+    loop do
+      date = input_rental_date
+      break unless date.nil?
+
+      puts 'Invalid date format. Please enter the date in the format "YYYY-MM-DD".'
+    end
 
     person = people.find { |p| p.id == person_id }
-
     if person.nil?
       puts "Person with ID #{person_id} not found."
       return
     end
 
+    Rental.new(date, book, person)
+    puts 'Rental successfully created!'
+  end
+
+  # Helper methods
+
+  def input_person_id
+    puts "Enter the person's ID:"
+    person_id = gets.chomp.to_i
+    person = people.find { |p| p.id == person_id }
+
+    if person.nil?
+      puts "Person with ID #{person_id} not found."
+      return nil
+    end
+
+    person_id
+  end
+
+  def input_book_number
     puts 'Enter the number of the book you want to rent:'
     book_number = gets.chomp.to_i
 
     if book_number < 1 || book_number > books.length
       puts 'Invalid book number. Please try again.'
-      return
+      return nil
     end
 
-    book = books[book_number - 1]
+    book_number
+  end
 
+  def input_rental_date
     puts 'Enter the rental date (YYYY-MM-DD):'
     date = gets.chomp
-
-    Rental.new(date, book, person)
-
-    puts 'Rental successfully created!'
+    date.match(/\A\d{4}-\d{2}-\d{2}\z/) ? date : nil
   end
 
   def list_rentals_for_person
