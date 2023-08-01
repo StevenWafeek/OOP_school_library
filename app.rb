@@ -118,8 +118,6 @@ class LibraryApp
     puts 'Rental successfully created!'
   end
 
-  # Helper methods
-
   def input_person_id
     puts "Enter the person's ID:"
     person_id = gets.chomp.to_i
