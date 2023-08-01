@@ -171,6 +171,12 @@ Example:
 - LinkedIn: [steven wafeek
   ](https://www.linkedin.com/in/steven-wafeek-b629341b6/)
 
+👤 **Marco Almada**
+
+- GitHub: [StevenWafeek](https://github.com/MarcoDDM)
+- Twitter: [nerdpiola](https://twitter.com/nerdpiola)
+- LinkedIn: [Marco Almada](https://www.linkedin.com/in/marcoalmadaar/)
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- FUTURE FEATURES -->
