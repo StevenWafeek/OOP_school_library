@@ -1,37 +1,27 @@
-class Nameable
-  def correct_name
-    raise NotImplementedError, "#{self.class} must implement the correct_name method"
-  end
-end
+class Person
+  attr_reader :id, :name, :age
 
-class Person < Nameable
-  attr_accessor :name, :age, :rentals
-  attr_reader :id
+  @assigned_ids = []
 
-  def initialize(age, parent_permission: true, name: 'Unknown')
-    super()
-    @id = rand(1..1000)
+  def initialize(name, age)
+    @id = generate_id
     @name = name
     @age = age
-    @parent_permission = parent_permission
-    @rentals = [] # Initialize rentals as an empty array
   end
 
-  def correct_name
-    @name
-  end
-
-  def can_use_services?
-    of_age? || @parent_permission
-  end
-
-  def link_rental(rental)
-    @rentals << rental
+  def self.assigned_ids
+    @assigned_ids ||= [] # Lazy initialization using ||= to prevent nil
   end
 
   private
 
-  def of_age?
-    @age >= 18
+  def generate_id
+    new_id = nil
+    loop do
+      new_id = rand(1000..9999)
+      break unless self.class.assigned_ids.include?(new_id)
+    end
+    self.class.assigned_ids << new_id
+    new_id
   end
 end
