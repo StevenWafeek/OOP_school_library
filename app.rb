@@ -4,6 +4,7 @@ require_relative 'teacher'
 require_relative 'classroom'
 require_relative 'book'
 require_relative 'rental'
+require 'json'
 
 class LibraryApp
   attr_accessor :books, :people
@@ -11,6 +12,8 @@ class LibraryApp
   def initialize
     @books = []
     @people = []
+    @rentals = []
+    load_data_from_json
   end
 
   def list_all_books
@@ -114,8 +117,13 @@ class LibraryApp
       return
     end
 
-    Rental.new(date, book, person)
-    puts 'Rental successfully created!'
+    rental = Rental.new(date, book, person)
+    @rentals << rental
+
+    puts "Rental created successfully"
+
+    # Save rentals data to JSON after creating a new rental
+    save_rentals_to_json(@rentals) # Pass @rentals as an argument
   end
 
   def input_person_id
@@ -166,4 +174,99 @@ class LibraryApp
       puts "Date: #{rental.date}, Book: #{rental.book.title}, Author: #{rental.book.author}"
     end
   end
+ # Standalone method to save all data to JSON files
+ def save_data_to_json
+  save_books_to_json(books)
+  save_people_to_json(people)
+  save_rentals_to_json(@rentals)
+end
+
+# Standalone method to load all data from JSON files
+def load_data_from_json
+  @books = load_books_from_json
+  @people = load_people_from_json
+  @rentals = load_rentals_from_json(@books, @people) # Pass @books and @people as arguments
+end
+
+# Helper method to save books to JSON
+def save_books_to_json(books)
+  File.open('books.json', 'w') do |file|
+    file.write(JSON.pretty_generate(books.map(&:to_hash)))
+  end
+end
+
+# Helper method to load books from JSON
+def load_books_from_json
+  return [] unless File.exist?('books.json')
+
+  data = JSON.parse(File.read('books.json'))
+  data.map { |book_data| Book.from_hash(book_data) }
+end
+
+# Helper method to save people to JSON
+def save_people_to_json(people)
+  File.open('people.json', 'w') do |file|
+    file.write(JSON.pretty_generate(people.map(&:to_hash)))
+  end
+end
+
+# Helper method to load people from JSON
+def load_people_from_json
+  return [] unless File.exist?('people.json')
+
+  data = JSON.parse(File.read('people.json'))
+  data.map { |person_data| Person.from_hash(person_data) }
+end
+
+# Helper method to load rentals from JSON
+def load_rentals_from_json(books, people)
+  return [] unless File.exist?('rentals.json')
+
+  data = JSON.parse(File.read('rentals.json'))
+  rentals = data.map do |rental_data|
+    book = books.find { |b| b.title == rental_data['book']['title'] && b.author == rental_data['book']['author'] }
+    person = people.find { |p| p.id == rental_data['person_id'] }
+
+    if book.nil?
+      puts "Book with title '#{rental_data['book']['title']}' and author '#{rental_data['book']['author']}' not found."
+      next
+    end
+
+    if person.nil?
+      puts "Person with ID #{rental_data['person_id']} not found."
+      next
+    end
+
+    Rental.new(rental_data['date'], book, person)
+  end
+
+  rentals.compact # Remove any nil elements from the array
+end
+
+# Helper method to save rentals to JSON
+def save_rentals_to_json(rentals)
+  rentals_data = rentals.map do |rental|
+    {
+      'date' => rental.date,
+      'book' => {
+        'title' => rental.book.title,
+        'author' => rental.book.author
+      },
+      'person_id' => rental.person.id,
+      'classroom_label' => rental.person.is_a?(Student) ? rental.person.classroom&.label : nil
+    }
+  end
+
+  File.open('rentals.json', 'w') do |file|
+    file.write(JSON.pretty_generate(rentals_data))
+  end
+end
+
+
+
+# Add a method to register rental for a book and person
+def register_rental(rental)
+  rental.book.rentals << rental
+  rental.person.rentals << rental
+end
 end

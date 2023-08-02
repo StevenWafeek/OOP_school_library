@@ -1,8 +1,8 @@
 require_relative 'app'
 
 class UserInterface
-  def initialize
-    @library_app = LibraryApp.new
+  def initialize(library_app)
+    @library_app = library_app
   end
 
   def start
@@ -34,7 +34,8 @@ class UserInterface
       when 6
         @library_app.list_rentals_for_person
       when 7
-        puts 'Exiting the app. Goodbye!'
+        puts 'Exiting the app. Saving data and goodbye!'
+        @library_app.save_data_to_json # Save all data before exiting
         break
       else
         puts 'Invalid choice. Please try again.'
@@ -43,4 +44,7 @@ class UserInterface
   end
 end
 
-UserInterface.new.start
+library_app = LibraryApp.new
+library_app.load_data_from_json # Load data from JSON files on startup
+
+UserInterface.new(library_app).start

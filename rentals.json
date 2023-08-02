@@ -1,0 +1,20 @@
+[
+  {
+    "date": "1212-12-12",
+    "book": {
+      "title": "zooo",
+      "author": "zooo"
+    },
+    "person_id": 3,
+    "classroom_label": null
+  },
+  {
+    "date": "1212-12-12",
+    "book": {
+      "title": "as",
+      "author": "as"
+    },
+    "person_id": 4,
+    "classroom_label": null
+  }
+]
