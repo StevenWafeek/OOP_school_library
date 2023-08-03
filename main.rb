@@ -25,7 +25,7 @@ class Main
 
   def options
     puts
-    puts 'Please choose an option by enterin a number:'
+    puts 'Please choose an option by entering a number:'
     puts '1 - List all books'
     puts '2 - List all people'
     puts '3 - Create a person'
