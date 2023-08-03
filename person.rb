@@ -1,27 +1,31 @@
+require './corrector'
+
 class Person
-  attr_reader :id, :name, :age
+  attr_reader :id
+  attr_accessor :name, :age, :classroom, :rentals, :parent_permission
 
-  @assigned_ids = []
-
-  def initialize(name, age)
-    @id = generate_id
+  def initialize(id:, age:, name: 'Unknown', parent_permission: true)
+    @id = id || Random.rand(1..1000)
     @name = name
     @age = age
+    @parent_permission = parent_permission
+    @corrector = Corrector.new
+    @rentals = []
   end
 
-  def self.assigned_ids
-    @assigned_ids ||= [] # Lazy initialization using ||= to prevent nil
+  def can_use_services?
+    return true if of_age? || @parent_permission
+  end
+
+  def validate_name
+    @corrector.correct_name(@name)
   end
 
   private
 
-  def generate_id
-    new_id = nil
-    loop do
-      new_id = rand(1000..9999)
-      break unless self.class.assigned_ids.include?(new_id)
-    end
-    self.class.assigned_ids << new_id
-    new_id
+  def of_age?
+    return true if @age >= 10
+
+    false
   end
 end

@@ -1,169 +1,147 @@
-require_relative 'person'
-require_relative 'student'
-require_relative 'teacher'
-require_relative 'classroom'
-require_relative 'book'
-require_relative 'rental'
+require './student'
+require './teacher'
+require './book'
+require './rental'
+require './data_controller'
+require './input'
 
-class LibraryApp
-  attr_accessor :books, :people
-
+class App
+  include DataController
   def initialize
-    @books = []
-    @people = []
+    @books = load_books
+    @persons = load_peoble
+    @rentals = load_rentals
+    @input = Input.new
+  end
+
+  def options_cases(user_input)
+    case user_input
+    when '1'
+      list_all_books
+    when '2'
+      list_all_people
+    when '3'
+      create_person
+    when '4'
+      create_book
+    when '5'
+      create_rental
+    when '6'
+      list_all_rental_by_id
+    end
   end
 
   def list_all_books
-    puts "\nList of all books:"
-    books.each do |book|
-      puts "#{book.title} by #{book.author}"
+    @books.each do |book|
+      puts "Title: \"#{book.title}\", Author: #{book.author}"
     end
   end
 
   def list_all_people
-    puts "\nList of all people:"
-    people.each do |person|
-      puts "#{person.name} (#{person.class.name}) - ID: #{person.id}"
+    @persons.each do |person|
+      puts "[#{person.class}] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
     end
   end
 
   def create_person
-    puts "\nCreate a person:"
-    puts 'Is it a teacher or a student? (T/S)'
-    role = gets.chomp.downcase
+    print 'Do you want to create a student (1) or a teacher (2)? [Input the number]: '
+    student_or_teacher = @input.read
 
-    if role == 't'
-      puts "Enter the teacher's age:"
-      age = gets.chomp.to_i
-      if age.zero?
-        puts 'Invalid age. Please enter a valid number.'
-        return
-      end
-
-      puts "Enter the teacher's name:"
-      name = gets.chomp
-      puts "Enter the teacher's specialization:"
-      specialization = gets.chomp
-      person = Teacher.new(name, age, specialization)
-    elsif role == 's'
-      puts "Enter the student's age:"
-      age = gets.chomp.to_i
-      if age.zero?
-        puts 'Invalid age. Please enter a valid number.'
-        return
-      end
-
-      puts "Enter the student's name:"
-      name = gets.chomp
-      puts "Enter the student's classroom label:"
-      classroom_label = gets.chomp
-      classroom = Classroom.new(classroom_label)
-      person = Student.new(name, age, classroom)
+    case student_or_teacher
+    when '1'
+      create_student
+    when '2'
+      create_teacher
     else
-      puts 'Invalid role. Please try again.'
+      puts 'Wrong Input!'
       return
     end
 
-    people << person
+    puts 'Person created successfully'
+  end
 
-    puts 'Person successfully created!'
-    puts "ID: #{person.id}, Name: #{person.name}, Role: #{person.class.name}"
+  def create_student
+    print 'Age: '
+    age = @input.read
+
+    print 'Name: '
+    name = @input.read
+
+    print 'Has parent permission? [Y/N]: '
+    parent_permission = @input.read
+
+    unless parent_permission.upcase == 'Y' || parent_permission.upcase == 'N'
+      puts 'Wrong Input!'
+      return
+    end
+
+    parent_permission = parent_permission.upcase == 'Y'
+    @persons.push(Student.new(age: age.to_i, name: name, parent_permission: parent_permission))
+  end
+
+  def create_teacher
+    print 'Age: '
+    age = @input.read
+
+    print 'Name: '
+    name = @input.read
+
+    print 'Specialization: '
+    specialization = @input.read
+    @persons.push(Teacher.new(specialization: specialization, age: age.to_i, name: name))
   end
 
   def create_book
-    puts "\nCreate a book:"
-    puts "Enter the book's title:"
-    title = gets.chomp
+    print 'Title: '
+    title = @input.read
 
-    puts "Enter the book's author:"
-    author = gets.chomp
+    print 'Author: '
+    author = @input.read
 
-    book = Book.new(title, author)
+    @books.push(Book.new(title, author))
 
-    books << book
-
-    puts 'Book successfully created!'
-    puts "Title: #{book.title}, Author: #{book.author}"
+    puts 'Book created successfully'
   end
 
   def create_rental
-    puts "\nCreate a rental:"
+    puts 'Select a book from the following list by number'
 
-    list_all_people
-    list_all_books
-
-    person_id = input_person_id
-    return if person_id.nil?
-
-    book_number = input_book_number
-    return if book_number.nil?
-
-    book = books[book_number - 1]
-
-    date = nil
-    loop do
-      date = input_rental_date
-      break unless date.nil?
-
-      puts 'Invalid date format. Please enter the date in the format "YYYY-MM-DD".'
+    @books.each_with_index do |book, index|
+      puts "#{index}) Title: \"#{book.title}\", Author: #{book.author}"
     end
 
-    person = people.find { |p| p.id == person_id }
-    if person.nil?
-      puts "Person with ID #{person_id} not found."
+    book_index = @input.read
+
+    puts 'Select a person from the following list by number (not id)'
+
+    @persons.each_with_index do |person, index|
+      puts "#{index}) Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
+    end
+
+    person_index = @input.read
+
+    if book_index.to_i >= @books.length || person_index.to_i >= @persons.length
+      puts 'Wrong Index!'
       return
     end
 
-    Rental.new(date, book, person)
-    puts 'Rental successfully created!'
+    print 'Date: '
+    date = @input.read
+
+    @rentals.push(Rental.new(date, @books[book_index.to_i], @persons[person_index.to_i]))
+
+    puts 'Rental created successfully'
   end
 
-  def input_person_id
-    puts "Enter the person's ID:"
-    person_id = gets.chomp.to_i
-    person = people.find { |p| p.id == person_id }
+  def list_all_rental_by_id
+    print 'ID of person: '
+    person_id = @input.read
 
-    if person.nil?
-      puts "Person with ID #{person_id} not found."
-      return nil
-    end
-
-    person_id
-  end
-
-  def input_book_number
-    puts 'Enter the number of the book you want to rent:'
-    book_number = gets.chomp.to_i
-
-    if book_number < 1 || book_number > books.length
-      puts 'Invalid book number. Please try again.'
-      return nil
-    end
-
-    book_number
-  end
-
-  def input_rental_date
-    puts 'Enter the rental date (YYYY-MM-DD):'
-    date = gets.chomp
-    date.match(/\A\d{4}-\d{2}-\d{2}\z/) ? date : nil
-  end
-
-  def list_rentals_for_person
-    puts "\nList rentals for a person:"
-    puts "Enter the person's ID:"
-    person_id = gets.chomp.to_i
-
-    person = people.find { |p| p.id == person_id }
-
-    if person.nil?
-      puts "Person with ID #{person_id} not found."
-      return
-    end
-
-    puts "Rentals for #{person.name}:"
-    person.rentals.each do |rental|
-      puts "Date: #{rental.date}, Book: #{rental.book.title}, Author: #{rental.book.author}"
+    puts 'Rentals:'
+    @rentals.each do |rental|
+      if rental.person.id.to_s == person_id
+        puts "Date: #{rental.date}, Book \"#{rental.book.title}\" by #{rental.book.author}"
+      end
     end
   end
 end
