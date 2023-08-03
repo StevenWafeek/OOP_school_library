@@ -1,54 +1,31 @@
+require './corrector'
+
 class Person
-  attr_reader :id, :name, :age
-  attr_accessor :rentals
+  attr_reader :id
+  attr_accessor :name, :age, :classroom, :rentals, :parent_permission
 
-  @@id_counter = 0
-
-  def initialize(name, age)
-    @id = generate_id
+  def initialize(id:, age:, name: 'Unknown', parent_permission: true)
+    @id = id || Random.rand(1..1000)
     @name = name
     @age = age
+    @parent_permission = parent_permission
+    @corrector = Corrector.new
     @rentals = []
   end
 
-  def to_hash
-    hash = {
-      'class' => self.class.to_s,
-      'id' => id,
-      'name' => name,
-      'age' => age
-    }
-
-    # Include additional attributes for subclasses
-    if self.is_a?(Student)
-      hash['classroom'] = {
-        'label' => classroom.label
-      }
-    elsif self.is_a?(Teacher)
-      hash['specialization'] = specialization
-    end
-
-    hash
+  def can_use_services?
+    return true if of_age? || @parent_permission
   end
 
-  def self.from_hash(person_data)
-    if person_data['class'] == 'Student'
-      classroom = Classroom.new(person_data['classroom']['label'])
-      Student.new(person_data['name'], person_data['age'], classroom)
-    elsif person_data['class'] == 'Teacher'
-      Teacher.new(person_data['name'], person_data['age'], person_data['specialization'])
-    else
-      raise ArgumentError, 'Invalid person class in JSON data'
-    end
-  end
-
-  def add_rental(rental)
-    @rentals << rental
+  def validate_name
+    @corrector.correct_name(@name)
   end
 
   private
 
-  def generate_id
-    @@id_counter += 1
+  def of_age?
+    return true if @age >= 10
+
+    false
   end
 end

@@ -1,16 +1,1 @@
-[
-  {
-    "class": "Teacher",
-    "id": 3,
-    "name": "as",
-    "age": 12,
-    "specialization": "as"
-  },
-  {
-    "class": "Teacher",
-    "id": 4,
-    "name": "momo",
-    "age": 12,
-    "specialization": "asas"
-  }
-]
+[{"id":73,"age":30,"name":"Karel","parent_permission":true,"data_type":"Student"},{"id":751,"age":25,"name":"Shahier","parent_permission":true,"data_type":"Student"}]
